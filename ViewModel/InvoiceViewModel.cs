@@ -40,6 +40,10 @@ namespace InvoiceApp.ViewModel
         {
             get
             {
+              //comp error
+              //  GenericPrice<BGN> amountToGetDiscountBGN = new GenericPrice<BGN>(20000);
+              // GenericPrice<EUR> amountToGetDiscountEUR = new GenericPrice<EUR>(100);
+              // amountToGetDiscountBGN + amountToGetDiscountEUR;
                 if (CurrentInvoice.Currency == CurrencyEnum.BGN)
                 {
                     GenericPrice<BGN> temp = new GenericPrice<BGN>(0);
@@ -200,6 +204,11 @@ namespace InvoiceApp.ViewModel
             OnCurrentInvoiceChanged(CurrentInvoice);
             OnPropertyChanged(nameof(TotalExclVat));
             OnPropertyChanged(nameof(TotalInclVat));
+            Task.Run(async () =>
+            {
+               await _context.RegisterInvoice(CurrentInvoice);
+            });
+            
         }
     }
 }

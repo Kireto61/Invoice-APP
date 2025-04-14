@@ -14,6 +14,7 @@ namespace InvoiceApp.Database
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Items> Items { get; set; }
         public DbSet<Customer> Customers { get; set; }
+
         public DbSet<CurrencyExchange> CurrencyExchanges { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -27,10 +28,16 @@ namespace InvoiceApp.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Invoice>().Property(e => e.Id).ValueGeneratedOnAdd();
-            modelBuilder.Entity<Items>().Property(e => e.Id).ValueGeneratedOnAdd();
+
             modelBuilder.Entity<Customer>().Property(e => e.Id).ValueGeneratedOnAdd();
+            
             modelBuilder.Entity<CurrencyExchange>().Property(e => e.Id).ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<Items>().HasKey(x => x.Id);
+            modelBuilder.Entity<Items>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Items>().HasOne(i => i.Invoice).WithMany(i => i.Items).HasForeignKey(i => i.InvoiceId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Items>().Property(x => x.Quantity).IsRequired();
+            
             // Create a customer
             var customer1 = new Customer()
             {
@@ -99,6 +106,22 @@ namespace InvoiceApp.Database
                 Rate = 0.56
             };
             modelBuilder.Entity<CurrencyExchange>().HasData(BGNTOUSD);
+        }
+        public async Task RegisterInvoice(Invoice invoice)
+        {
+            using var transaction = await Database.BeginTransactionAsync();
+            try
+            {
+                Invoices.Add(invoice);
+                await SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (e.g., log it, rethrow it, etc.)
+                Console.WriteLine($"Error saving invoice: {ex.Message}");
+                throw;
+            }
+
         }
     }
 }

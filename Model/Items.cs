@@ -80,7 +80,6 @@ namespace InvoiceApp.Model
                 OnPropertyChanged(nameof(Total));
             }
         }
-
         public double Total
         { 
             get 
@@ -88,5 +87,8 @@ namespace InvoiceApp.Model
                 return (Price * Quantity) * (1 - ((Quantity > 10) ? 0.2 : 0));
             }
         }
+
+        public int InvoiceId { get; set; }
+        public Invoice Invoice { get; set; }
     }
 }

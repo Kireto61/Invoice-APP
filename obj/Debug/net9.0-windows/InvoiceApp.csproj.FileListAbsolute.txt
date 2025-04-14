@@ -147,3 +147,4 @@ C:\Users\kikig\Source\Repos\PS_41_KirilValkov\InvoiceApp\obj\Debug\net9.0-window
 C:\Users\kikig\Source\Repos\PS_41_KirilValkov\InvoiceApp\bin\Debug\net9.0-windows\CommunityToolkit.Mvvm.dll
 C:\Users\kikig\Source\Repos\PS_41_KirilValkov\InvoiceApp\obj\Debug\net9.0-windows\View\Windows\InvoiceDisplayWindow.g.cs
 C:\Users\kikig\Source\Repos\PS_41_KirilValkov\InvoiceApp\obj\Debug\net9.0-windows\View\Windows\InvoiceDisplayWindow.baml
+C:\Users\kikig\Source\Repos\PS_41_KirilValkov\InvoiceApp\obj\Debug\net9.0-windows\InvoiceApp.sourcelink.json
