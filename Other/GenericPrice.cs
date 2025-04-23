@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceApp.Other
 {
-    class GenericPrice<T> : Price, IComparable<GenericPrice<T>> where T : CurrencyType, new()
+    public class GenericPrice<T> : Price, IComparable<GenericPrice<T>> where T : CurrencyType, new()
     {
         public GenericPrice(double amount) : base(amount, new T())
         {

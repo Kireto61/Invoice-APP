@@ -40,80 +40,42 @@ namespace InvoiceApp.ViewModel
         {
             get
             {
-              //comp error
-              //  GenericPrice<BGN> amountToGetDiscountBGN = new GenericPrice<BGN>(20000);
+              // comp error
+              // GenericPrice<BGN> amountToGetDiscountBGN = new GenericPrice<BGN>(20000);
               // GenericPrice<EUR> amountToGetDiscountEUR = new GenericPrice<EUR>(100);
               // amountToGetDiscountBGN + amountToGetDiscountEUR;
                 if (CurrentInvoice.Currency == CurrencyEnum.BGN)
                 {
-                    GenericPrice<BGN> temp = new GenericPrice<BGN>(0);
+                    GenericSum<BGN> sum = new((CurrencyEnum)CurrentInvoice.Currency);
                     foreach (var item in CurrentInvoice.Items)
                     {
-                        if (item.Currency == null) continue;
-                        if (CurrentInvoice.Currency == null) continue;
-                        if (item.Currency == CurrentInvoice.Currency) temp += new GenericPrice<BGN>(item.Total);
-                        else
-                        {
-                            var rate = _context.CurrencyExchanges.Where(exh => exh.FromCurrency == item.Currency && exh.ToCurrency == CurrentInvoice.Currency).First().Rate;
-                            temp += new GenericPrice<BGN>(rate * item.Total);
-                        }
+                        sum.Add(item, _context.CurrencyExchanges);
                     }
-                    if (temp.CompareTo(amountToGetDiscountBGN) == 1)
-                    {
-                        return temp * 0.9;
-                    }
-                    else
-                    {
-                        return temp;
-                    }
+                    sum.ApplyBigSumDiscount(amountToGetDiscountBGN);
+                    return sum.Sum;
                 }
                 else if (CurrentInvoice.Currency == CurrencyEnum.EUR)
                 {
                     GenericPrice<EUR> amountToGetDiscountEUR = new GenericPrice<EUR>(_context.CurrencyExchanges.Where(exh => exh.FromCurrency == CurrencyEnum.BGN && exh.ToCurrency == CurrencyEnum.EUR).First().Rate * amountToGetDiscountBGN.Amount);
-                    GenericPrice<EUR> temp = new GenericPrice<EUR>(0);
+                    GenericSum<EUR> sum = new((CurrencyEnum)CurrentInvoice.Currency);
+
                     foreach (var item in CurrentInvoice.Items)
                     {
-                        if (item.Currency == null) continue;
-                        if (CurrentInvoice.Currency == null) continue;
-                        if (item.Currency == CurrentInvoice.Currency) temp += new GenericPrice<EUR>(item.Total);
-                        else
-                        {
-                            var rate = _context.CurrencyExchanges.Where(exh => exh.FromCurrency == item.Currency && exh.ToCurrency == CurrentInvoice.Currency).First().Rate;
-                            temp += new GenericPrice<EUR>(rate * item.Total);
-                        }
+                        sum.Add(item, _context.CurrencyExchanges);
                     }
-                    if (temp.CompareTo(amountToGetDiscountEUR) == 1)
-                    {
-                        return temp * 0.9;
-                    }
-                    else
-                    {
-                        return temp;
-                    }
+                    sum.ApplyBigSumDiscount(amountToGetDiscountEUR);
+                    return sum.Sum;
                 }
                 else if (CurrentInvoice.Currency == CurrencyEnum.USD)
                 {
                     GenericPrice<USD> amountToGetDiscountUSD = new GenericPrice<USD>(_context.CurrencyExchanges.Where(exh => exh.FromCurrency == CurrencyEnum.BGN && exh.ToCurrency == CurrencyEnum.USD).First().Rate * amountToGetDiscountBGN.Amount);
-                    GenericPrice<USD> temp = new GenericPrice<USD>(0);
+                    GenericSum<USD> sum = new((CurrencyEnum)CurrentInvoice.Currency);
                     foreach (var item in CurrentInvoice.Items)
                     {
-                        if (item.Currency == null) continue;
-                        if (CurrentInvoice.Currency == null) continue;
-                        if (item.Currency == CurrentInvoice.Currency) temp += new GenericPrice<USD>(item.Total);
-                        else
-                        {
-                            var rate = _context.CurrencyExchanges.Where(exh => exh.FromCurrency == item.Currency && exh.ToCurrency == CurrentInvoice.Currency).First().Rate;
-                            temp += new GenericPrice<USD>(rate * item.Total);
-                        }
+                        sum.Add(item, _context.CurrencyExchanges);
                     }
-                    if (temp.CompareTo(amountToGetDiscountUSD) == 1)
-                    {
-                        return temp * 0.9;
-                    }
-                    else
-                    {
-                        return temp;
-                    }
+                    sum.ApplyBigSumDiscount(amountToGetDiscountUSD);
+                    return sum.Sum;
                 }
                 return new GenericPrice<BGN>(0);
             }
